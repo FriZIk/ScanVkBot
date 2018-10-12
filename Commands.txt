@@ -1,0 +1,5 @@
+1)Add a new range of addresses to scan:/newip
+2)Port selection for scanning:/ports
+3)Start scanning for selected addresses:/scan
+4)Show current scan logs:/logs
+5)Stop scanning:/stop

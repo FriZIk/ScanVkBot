@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+</html>
+
+
+#for Line_Number in range(4):ips.readline()
+
+568486960:AAFkaZAkR-dba8yGSp0PD0ogaNtKAyEz3TA
+
+  try:
+
+        markup=types.ReplyKeyboardMarkup(one_time_keyboard=True)
+        ssh=types.KeyboardButton("22")
+        ftp=types.KeyboardButton("21")
+        web=types.KeyboardButton("80")
+        markup.row(ssh,ftp,web)
+        bot.send_message(message.chat.id,"Select the port to scan",reply_markup=markup)
+        bot.send.message(message.chat.id,"The new ports are installed")
+        #bot.register_next_step_handler(msg,write)
+    except Exception as e:
+        bot.reply_to(message,"Unknown error,try again")
