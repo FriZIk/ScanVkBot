@@ -75,9 +75,10 @@ def parsing_ip_and_ports_list(message):
     Count_Lines = len(ips.readlines());ips.close()
     ips = open("ips.txt", "r")#Вот за это мне стыдно,это просто ужасно,серьёзно убейте меня
     Index_Line=0;lines_index = []
+
     while ips.readline():
         lines_index.append(ips.tell())
-    while(Index_Line!=Count_Lines-2):
+    while(Index_Line!=Count_Lines-1):
         ips.seek(lines_index[Index_Line])
         string_IPS=ips.readline()
         print(string_IPS)
@@ -93,23 +94,26 @@ def parsing_ip_and_ports_list(message):
         first_string_ips=first_string_ips[0:zero_index1]
         first_string_ips2 = first_string_ips
         while(first_string_ips!=second_string_ips):
+            #white = open("whiteips.txt", "w")
             first_string_ips_parse=int(first_string_ips_parse)
             first_string_ips_parse=first_string_ips_parse+1
             first_string_ips_parse=str(first_string_ips_parse)
             first_string_ips=first_string_ips2+"."+first_string_ips_parse#Наконец-то получаем окончательный ip
-            #проверяем полученный ip адресс
+            #проверяем exit
+полученный ip адресс
             s = socket.socket()
-            s.settimeout(0.00001)
+            s.settimeout(0.1)
             try:
                 s.connect((first_string_ips, Port))
             except socket.error:
                 pass
             else:
                 s.close
-                a+=(first_string_ips+':'+str(Port)+'\n')
+                bot.send_message(message.chat.id,first_string_ips + ':' + str(Port) + ' Active port!!!Continue scanning ')
+                white.write(first_string_ips + ':' + str(Port)+'\n')
         Index_Line=Index_Line+1
+    white.close()
     bot.send_message(message.chat.id, "Range scan finished!!!")
-    bot.send_message(message.chat.id, a);
 @bot.message_handler(commands="logs")
 def handle_stoping_scan(message):
     bot.send_message(message.chat.id,"scanning stopped")
