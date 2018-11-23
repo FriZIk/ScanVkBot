@@ -1,7 +1,7 @@
 # ScanTelegramBot
 Port scanner executed on the server,driven through Telegram
 
-# Work through Tor
+## Work through Tor
 If your provider blocks the connection with Telegram,use proxychains4.Commands to install and using:
 
 ```
