@@ -116,3 +116,4 @@ def parsing_ip_and_ports_list(message):
 def handle_stoping_scan(message):
     bot.send_message(message.chat.id,"scanning stopped")
 if __name__ == "__main__":bot.polling(none_stop=True)
+
