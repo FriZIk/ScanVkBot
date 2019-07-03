@@ -1,22 +1,22 @@
 #сканер
 import socket
 
-white=open("whiteips.txt")
+white=open("/home/frizik/Projects/ScanTelegramBot/Data/whiteips.txt")
 #Для начала сформируем файл,в который скинем все ip адресса,которые откликнутся на порт,указанный нами
-ports=open("ports.txt","r")
+ports=open("/home/frizik/Projects/ScanTelegramBot/Data/ports.txt","r")
 Port=ports.read()#Получили порт по которому будем сканировать
 Port=int(Port)
-ips=open("ips.txt","r")
+ips=open("/home/frizik/Projects/ScanTelegramBot/Data/ips.txt","r")
 Count_Lines = len(ips.readlines());ips.close()
-ips = open("ips.txt", "r")#Вот за это мне стыдно,это просто ужасно,серьёзно убейте меня
+ips = open("/home/frizik/Projects/ScanTelegramBot/Data/ips.txt", "r")#Вот за это мне стыдно,это просто ужасно,серьёзно убейте меня
 Index_Line=0;lines_index = []
 a=("")#строка для выдачи
 while ips.readline():
     lines_index.append(ips.tell())
-while(Index_Line!=Count_Lines-2):
+while(Index_Line!=Count_Lines-1):
     ips.seek(lines_index[Index_Line])
     string_IPS=ips.readline()
-    #print(string_IPS)
+
     Lenght_string_IPS=len(string_IPS)
     dash_index=string_IPS.index("-")#На этом останавливаемся,всё остальное не нужно так как разичия в строках адрессво только в последнем блоке
     first_string_ips=string_IPS[0:dash_index]#Получили нужны кусок теперь остаётся как-то инкерментирвоать последние цифры от 0 до 255
@@ -35,10 +35,11 @@ while(Index_Line!=Count_Lines-2):
         first_string_ips=first_string_ips2+"."+first_string_ips_parse#Наконец-то получаем окончательный ip
         #проверяем полученный ip адресс
         s = socket.socket()
-        s.settimeout(0.01)
+        s.settimeout(0.0001)
         try:
             s.connect((first_string_ips, Port))
         except socket.error:
+            print(first_string_ips + ': not work...next')
             pass
         else:
             s.close

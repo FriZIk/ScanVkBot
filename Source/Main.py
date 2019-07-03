@@ -4,7 +4,7 @@ import socket
 
 print("DarkResearch Scaner")
 
-Key=("568486960:AAFkaZAkR-dba8yGSp0PD0ogaNtKAyEz3TA")
+Key=("")
 bot = telebot.TeleBot(Key)
 print("Conecting...")
 user =bot.get_me()#Проверям подключение
