@@ -4,10 +4,16 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from pyvirtualdisplay import Display
-import numpy as np
+import ScanIPS as IPs
+import re
+
+def StopParser(driver,display):
+    driver.quit()
+    display.stop()
+
 
 def AutoParserIPs(town):
-    display = Display(visible=0, size=(800, 800))  
+    display = Display(visible=0, size=(1, 1))  
     display.start()
     driver = webdriver.Chrome()
     link = "https://4it.me/getlistip"
@@ -17,10 +23,16 @@ def AutoParserIPs(town):
     elem.submit()
     ips = []
     try:
-        value  = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.TAG_NAME,"pre")))
+        value  = WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.TAG_NAME,"pre")))
         ips = value.text
-        IpsArray = np.array(ips)
-        print(IpsArray)
+        StopParser(driver,display)
+
+        prefab = re.compile('-')
+        CountOfStrings = len(prefab.findall(ips))
+
+        prefab1 = re.compile('\n')
+        CountOfn = len(prefab1.findall(ips))
+
+        IPs.StringParser(ips,CountOfStrings,CountOfn)
     finally:
-        driver.quit()
-        display.stop()
+        StopParser(driver,display)

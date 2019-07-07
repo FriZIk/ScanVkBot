@@ -3,7 +3,6 @@ from telebot import types
 import IpParser as ips
 
 
-
 def Scaner():
     print("Введите название города:")
     TownName = input() 
@@ -52,7 +51,6 @@ def writeIPS(message):
     except Exception as e:
         bot.reply_to(message,"Unknown error,try again((")
 
-#как-то всё очень криво,но красиво мы сделаме потом,сейчас главное чтобы заработало
 
 @bot.message_handler(commands=["ports"])
 def handle_ports(message):
