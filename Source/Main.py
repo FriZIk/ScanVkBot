@@ -4,17 +4,17 @@ import IpParser as ips
 
 
 def Scaner():
-    print("Введите название города:")
+    print("Введите название города:", end = "")
     TownName = input() 
     ips.AutoParserIPs(TownName)
 
 
-print("Введите ключ бота:")
+print("Введите ключ бота:", end = "")
 BotFatherKey = input()
 bot = telebot.TeleBot(BotFatherKey)
 try:
     user = bot.get_me()
-    print("Успешное подключение!")
+    print("Успешное подключение!", end = "")
 except:
     print("Ошибка подключения,проверьте правильность введённых данных")
 Scaner()

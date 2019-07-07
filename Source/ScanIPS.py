@@ -19,11 +19,23 @@ def ReturnArrayWithIndex(Combination,Array,TargetArray):
     return TargetArray
 
 
-def TestFunc(Array):
-    ZeroIndexArray = 0
-    first_string_ips = Array[ZeroIndexArray:Array.index("-")]
-    second_string_ips = Array[Array.index("-")+1:Array.index("\n")] 
-    print(first_string_ips,second_string_ips)
+def FinalIpRange(first_string_ips,second_string_ips):
+
+
+def FragmentationFunc(Array,CountOfDash,ZeroIndexArray,DashIndexArray):
+    IndexForDash =  0
+    IndexForZero = 0
+    while IndexForDash < CountOfDash:
+        first_string_ips = Array[IndexForZero:DashIndexArray[IndexForDash]-1]
+        if IndexForDash == CountOfDash - 1 : 
+            a = len(Array)
+            second_string_ips = Array[DashIndexArray[IndexForDash]:a]
+        else :
+            second_string_ips = Array[DashIndexArray[IndexForDash]:ZeroIndexArray[IndexForDash]-1]
+            IndexForZero = ZeroIndexArray[IndexForDash]
+        IndexForDash = IndexForDash + 1
+        print(first_string_ips,second_string_ips)
+        FinalIpRange(first_string_ips,second_string_ips)
 
 
 def StringParser(Array,CountOfDash,CountOfZeros):
@@ -32,11 +44,6 @@ def StringParser(Array,CountOfDash,CountOfZeros):
 
     ZeroIndexArray = ReturnArrayWithIndex("\n",Array,ZeroIndexArray)
     DashIndexArray = ReturnArrayWithIndex("-",Array,DashIndexArray)
-
-    print(ZeroIndexArray,DashIndexArray)
-
-    if Debug == True:
-        print(Array,Count,count)
-        Count1 = ReturnCount("\n",Array)
-        Count2 = ReturnCount("-",Array)
-        print(Count1,Count2)
+    if Debug == True : print(ZeroIndexArray,DashIndexArray)
+    
+    FragmentationFunc(Array,CountOfDash,ZeroIndexArray,DashIndexArray)
