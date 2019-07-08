@@ -19,8 +19,36 @@ def ReturnArrayWithIndex(Combination,Array,TargetArray):
     return TargetArray
 
 
-def FinalIpRange(first_string_ips,second_string_ips):
+#пока что не кушает самый первый адресс сращу перескакивает на следуюущий  
+def FinalIpRange(first_string_ips,second_string_ips,CountOfDash):
+    FirstSeparation = first_string_ips.split(".")
+    SecondSeparation = second_string_ips.split(".")
+    print(FirstSeparation,SecondSeparation)
+    for i in range(4):
+        if FirstSeparation[i] != SecondSeparation[i]:
+            IpElementF = int(FirstSeparation[i])
+            IpElementS = int(SecondSeparation[i])
+            while IpElementF != IpElementS:
+                if IpElementF > IpElementS:
+                    while IpElementF < 255:
+                        IpElementF = IpElementF + 1
+                        FirstSeparation[i] = str(IpElementF)
+                        RezultString = FirstSeparation[0] + "." + FirstSeparation[1] + "." + FirstSeparation[2] + "." + FirstSeparation[3]
+                        print(RezultString)
+                    IpElementF = 0
+                    while IpElementF < IpElementS :
+                        IpElementF = IpElementF + 1
+                        FirstSeparation[i] = str(IpElementS)
+                        RezultString = RezultString = FirstSeparation[0] + "." + FirstSeparation[1] + "." + FirstSeparation[2] + "." + FirstSeparation[3]
+                        print(RezultString)
+                    break
 
+                else :
+                    IpElementF = IpElementF + 1
+                    FirstSeparation[i] = str(IpElementF)
+                    RezultString = FirstSeparation[0] + "." + FirstSeparation[1] + "." + FirstSeparation[2] + "." + FirstSeparation[3]
+                    print(RezultString)
+                
 
 def FragmentationFunc(Array,CountOfDash,ZeroIndexArray,DashIndexArray):
     IndexForDash =  0
@@ -35,7 +63,7 @@ def FragmentationFunc(Array,CountOfDash,ZeroIndexArray,DashIndexArray):
             IndexForZero = ZeroIndexArray[IndexForDash]
         IndexForDash = IndexForDash + 1
         print(first_string_ips,second_string_ips)
-        FinalIpRange(first_string_ips,second_string_ips)
+        FinalIpRange(first_string_ips,second_string_ips,CountOfDash)
 
 
 def StringParser(Array,CountOfDash,CountOfZeros):
