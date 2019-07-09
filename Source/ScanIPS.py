@@ -19,36 +19,40 @@ def ReturnArrayWithIndex(Combination,Array,TargetArray):
     return TargetArray
 
 
-#пока что не кушает самый первый адресс сращу перескакивает на следуюущий  
+def LogWriter(RezultString):
+    Logs = open("log.txt","a")
+    Logs.write(RezultString + "\n")
+    Logs.close()
+
+
 def FinalIpRange(first_string_ips,second_string_ips,CountOfDash):
     FirstSeparation = first_string_ips.split(".")
     SecondSeparation = second_string_ips.split(".")
     print(FirstSeparation,SecondSeparation)
-    for i in range(4):
-        if FirstSeparation[i] != SecondSeparation[i]:
-            IpElementF = int(FirstSeparation[i])
-            IpElementS = int(SecondSeparation[i])
-            while IpElementF != IpElementS:
-                if IpElementF > IpElementS:
-                    while IpElementF < 255:
-                        IpElementF = IpElementF + 1
-                        FirstSeparation[i] = str(IpElementF)
-                        RezultString = FirstSeparation[0] + "." + FirstSeparation[1] + "." + FirstSeparation[2] + "." + FirstSeparation[3]
-                        print(RezultString)
-                    IpElementF = 0
-                    while IpElementF < IpElementS :
-                        IpElementF = IpElementF + 1
-                        FirstSeparation[i] = str(IpElementS)
-                        RezultString = RezultString = FirstSeparation[0] + "." + FirstSeparation[1] + "." + FirstSeparation[2] + "." + FirstSeparation[3]
-                        print(RezultString)
-                    break
+    for Iterator in range(4):
+        if FirstSeparation[Iterator] != SecondSeparation[Iterator]:хз как-то в браузеер 
+            IpElementF = int(FirstSeparation[Iterator])
+            IpElementS = int(SecondSeparation[Iterator]) 
+            if FirstSeparation[Iterator] != SecondSeparation[Iterator]:
+                if FirstSeparation[Iterator] < SecondSeparation[Iterator]:
+                    if Iterator == 3:
+                        while IpElementF < IpElementS + 1:
+                            FirstSeparation[Iterator] = str(IpElementF)
+                            RezultString = FirstSeparation[0] + "." + FirstSeparation[1] + "." + FirstSeparation[2] + "." + FirstSeparation[3]
+                            IpElementF = IpElementF + 1
+                            LogWriter(RezultString)
+                        TrueCountF = int(FirstSeparation[Iterator - 1])
+                        TrueCountS = int(SecondSeparation[Iterator - 1])
+                        while TrueCountF < TrueCountS:
+                            TrueCountF = TrueCountF + 1
+                            FirstSeparation[Iterator - 1] = str(TrueCountF)
+                            IpElementF = 0
+                            while IpElementF < 255:
+                                FirstSeparation[Iterator] = str(IpElementF)
+                                RezultString = FirstSeparation[0] + "." + FirstSeparation[1] + "." + FirstSeparation[2] + "." + FirstSeparation[3]
+                                IpElementF = IpElementF + 1
+                                LogWriter(RezultString)                
 
-                else :
-                    IpElementF = IpElementF + 1
-                    FirstSeparation[i] = str(IpElementF)
-                    RezultString = FirstSeparation[0] + "." + FirstSeparation[1] + "." + FirstSeparation[2] + "." + FirstSeparation[3]
-                    print(RezultString)
-                
 
 def FragmentationFunc(Array,CountOfDash,ZeroIndexArray,DashIndexArray):
     IndexForDash =  0
@@ -62,6 +66,9 @@ def FragmentationFunc(Array,CountOfDash,ZeroIndexArray,DashIndexArray):
             second_string_ips = Array[DashIndexArray[IndexForDash]:ZeroIndexArray[IndexForDash]-1]
             IndexForZero = ZeroIndexArray[IndexForDash]
         IndexForDash = IndexForDash + 1
+        Logs = open("log.txt" , "a")
+        Logs.write("Рабочая строка:" + first_string_ips + " " + second_string_ips + "\n")
+        Logs.close()
         print(first_string_ips,second_string_ips)
         FinalIpRange(first_string_ips,second_string_ips,CountOfDash)
 
