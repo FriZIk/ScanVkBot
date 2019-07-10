@@ -1,10 +1,10 @@
-import socket
 import numpy as np
 from numpy import matrix 
-import peewee
+import scan as sc
 
 Debug = False
 
+ 
 def ReturnArrayWithIndex(Combination,Array,TargetArray):
     index = 0
     CountOfCombination = 0
@@ -19,18 +19,21 @@ def ReturnArrayWithIndex(Combination,Array,TargetArray):
     return TargetArray
 
 
-def LogWriter(RezultString):
-    Logs = open("log.txt","a")
+def LogWriter(RezultString,FilePath):
+    Logs = open(FilePath,"a")
     Logs.write(RezultString + "\n")
     Logs.close()
 
 
-def FinalIpRange(first_string_ips,second_string_ips,CountOfDash):
+def FinalIpRange(first_string_ips,second_string_ips,CountOfDash,Town):
+    sc.CreateDataBase()
+    LogPath = "/home/frizik/Projects/ScanTelegramBot/Logs/iplg.txt"
+    LogPathWorkString = "/home/frizik/Projects/ScanTelegramBot/Logs/ipworkedlg.txt"
     FirstSeparation = first_string_ips.split(".")
     SecondSeparation = second_string_ips.split(".")
     print(FirstSeparation,SecondSeparation)
     for Iterator in range(4):
-        if FirstSeparation[Iterator] != SecondSeparation[Iterator]:хз как-то в браузеер 
+        if FirstSeparation[Iterator] != SecondSeparation[Iterator]:
             IpElementF = int(FirstSeparation[Iterator])
             IpElementS = int(SecondSeparation[Iterator]) 
             if FirstSeparation[Iterator] != SecondSeparation[Iterator]:
@@ -40,7 +43,8 @@ def FinalIpRange(first_string_ips,second_string_ips,CountOfDash):
                             FirstSeparation[Iterator] = str(IpElementF)
                             RezultString = FirstSeparation[0] + "." + FirstSeparation[1] + "." + FirstSeparation[2] + "." + FirstSeparation[3]
                             IpElementF = IpElementF + 1
-                            LogWriter(RezultString)
+                            LogWriter(RezultString,LogPath)
+                            sc.ScanFunction(RezultString,Town)
                         TrueCountF = int(FirstSeparation[Iterator - 1])
                         TrueCountS = int(SecondSeparation[Iterator - 1])
                         while TrueCountF < TrueCountS:
@@ -51,10 +55,11 @@ def FinalIpRange(first_string_ips,second_string_ips,CountOfDash):
                                 FirstSeparation[Iterator] = str(IpElementF)
                                 RezultString = FirstSeparation[0] + "." + FirstSeparation[1] + "." + FirstSeparation[2] + "." + FirstSeparation[3]
                                 IpElementF = IpElementF + 1
-                                LogWriter(RezultString)                
+                                LogWriter(RezultString,LogPath)
+                                sc.ScanFunction(RezultString,Town)                
 
 
-def FragmentationFunc(Array,CountOfDash,ZeroIndexArray,DashIndexArray):
+def FragmentationFunc(Array,CountOfDash,ZeroIndexArray,DashIndexArray,Town):
     IndexForDash =  0
     IndexForZero = 0
     while IndexForDash < CountOfDash:
@@ -66,14 +71,15 @@ def FragmentationFunc(Array,CountOfDash,ZeroIndexArray,DashIndexArray):
             second_string_ips = Array[DashIndexArray[IndexForDash]:ZeroIndexArray[IndexForDash]-1]
             IndexForZero = ZeroIndexArray[IndexForDash]
         IndexForDash = IndexForDash + 1
-        Logs = open("log.txt" , "a")
-        Logs.write("Рабочая строка:" + first_string_ips + " " + second_string_ips + "\n")
-        Logs.close()
+
+        RezultString = "Рабочая строка:" + first_string_ips + " " + second_string_ips + "\n"
+        LogWriter(RezultString,"/home/frizik/Projects/ScanTelegramBot/Logs/ipworkedlg.txt")
+
         print(first_string_ips,second_string_ips)
-        FinalIpRange(first_string_ips,second_string_ips,CountOfDash)
+        FinalIpRange(first_string_ips,second_string_ips,CountOfDash,Town)
 
 
-def StringParser(Array,CountOfDash,CountOfZeros):
+def StringParser(Array,CountOfDash,CountOfZeros,Town):
     DashIndexArray = [0 for i in range(CountOfDash)]
     ZeroIndexArray = [0 for i in range(CountOfZeros)]
 
@@ -81,4 +87,4 @@ def StringParser(Array,CountOfDash,CountOfZeros):
     DashIndexArray = ReturnArrayWithIndex("-",Array,DashIndexArray)
     if Debug == True : print(ZeroIndexArray,DashIndexArray)
     
-    FragmentationFunc(Array,CountOfDash,ZeroIndexArray,DashIndexArray)
+    FragmentationFunc(Array,CountOfDash,ZeroIndexArray,DashIndexArray,Town)

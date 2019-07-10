@@ -1,22 +1,35 @@
 import telebot
 from telebot import types
-import IpParser as ips
+import parser
+import os
+from termcolor import colored
+import pyfiglet
+import subprocess as sp
 
 
 def Scaner():
-    print("Введите название города:", end = "")
+    Path = "/home/frizik/Projects/ScanTelegramBot/Logs"
+    Flag = True
+    if os.path.exists(Path + "/pinglg.txt") == True and Flag == True : os.remove(Path + "/pinglg.txt")
+    if os.path.exists(Path + "/pinglgN.txt") == True and Flag == True: os.remove(Path + "/pinglgN.txt")
+    if os.path.exists(Path + "/iplg.txt") == True and Flag == True:  os.remove(Path + "/iplg.txt")
+    if os.path.exists(Path + "/ipworkedlg.txt") == True and Flag == True: os.remove(Path + "/ipworkedlg.txt")
+    print(colored("Введите название города:","yellow"), end = "")
     TownName = input() 
-    ips.AutoParserIPs(TownName)
+    parser.AutoParserIPs(TownName)
 
+AsciiArt = pyfiglet.figlet_format("ScanTelegramBot")
 
-print("Введите ключ бота:", end = "")
+tmp = sp.call('clear',shell=True)
+print(colored(AsciiArt,"yellow"))
+print(colored("Введите ключ бота:", "yellow"), end = "")
 BotFatherKey = input()
 bot = telebot.TeleBot(BotFatherKey)
 try:
     user = bot.get_me()
-    print("Успешное подключение!", end = "")
+    print(colored("Успешное подключение!","green"))
 except:
-    print("Ошибка подключения,проверьте правильность введённых данных")
+    print(colored("Ошибка подключения,проверьте правильность введённых данных","red"))
 Scaner()
 
 

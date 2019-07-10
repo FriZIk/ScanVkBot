@@ -4,7 +4,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from pyvirtualdisplay import Display
-import ScanIPS as IPs
+import preparation as pr
 import re
 
 def StopParser(driver,display):
@@ -17,7 +17,13 @@ def AutoParserIPs(town):
     display.start()
     driver = webdriver.Chrome()
     link = "https://4it.me/getlistip"
+
     driver.get(link)
+
+    #Скрытый функционал
+    '''driver.get_screenshot_as_file('/home/frizik/test.png') 
+    driver.save_screenshot('/home/frizik/test.png')'''
+   
     elem = driver.find_element_by_id("city")
     elem.send_keys(town)
     elem.submit()
@@ -33,6 +39,6 @@ def AutoParserIPs(town):
         prefab1 = re.compile('\n')
         CountOfn = len(prefab1.findall(ips))
 
-        IPs.StringParser(ips,CountOfStrings,CountOfn)
+        pr.StringParser(ips,CountOfStrings,CountOfn,town)
     finally:
         StopParser(driver,display)
