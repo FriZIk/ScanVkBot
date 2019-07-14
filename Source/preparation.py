@@ -26,7 +26,7 @@ def LogWriter(RezultString,FilePath):
 
 
 def FinalIpRange(first_string_ips,second_string_ips,CountOfDash,Town):
-    sc.CreateDataBase()
+    #sc.CreateDataBase()
     LogPath = "/home/frizik/Projects/ScanTelegramBot/Logs/iplg.txt"
     LogPathWorkString = "/home/frizik/Projects/ScanTelegramBot/Logs/ipworkedlg.txt"
     FirstSeparation = first_string_ips.split(".")
@@ -57,7 +57,6 @@ def FinalIpRange(first_string_ips,second_string_ips,CountOfDash,Town):
                                 IpElementF = IpElementF + 1
                                 LogWriter(RezultString,LogPath)
                                 sc.ScanFunction(RezultString,Town)                
-
 
 def FragmentationFunc(Array,CountOfDash,ZeroIndexArray,DashIndexArray,Town):
     IndexForDash =  0

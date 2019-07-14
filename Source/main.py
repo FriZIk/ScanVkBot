@@ -1,92 +1,72 @@
-import telebot
-from telebot import types
-import parser
-import os
+import vk_api
+from vk_api.longpoll import VkLongPoll, VkEventType
+from vk_api import VkUpload
+import random
+import subprocess as sp
 from termcolor import colored
 import pyfiglet
-import subprocess as sp
+import parser  as pr
 
+# Функция вывода сообщения
+def WriteMsgFunc(user_id, message,random_id,vk):
+    vk.method('messages.send', {'user_id': user_id, 'message': message,'random_id':random_id})
 
-def Scaner():
-    Path = "/home/frizik/Projects/ScanTelegramBot/Logs"
-    Flag = True
-    if os.path.exists(Path + "/pinglg.txt") == True and Flag == True : os.remove(Path + "/pinglg.txt")
-    if os.path.exists(Path + "/pinglgN.txt") == True and Flag == True: os.remove(Path + "/pinglgN.txt")
-    if os.path.exists(Path + "/iplg.txt") == True and Flag == True:  os.remove(Path + "/iplg.txt")
-    if os.path.exists(Path + "/ipworkedlg.txt") == True and Flag == True: os.remove(Path + "/ipworkedlg.txt")
-    print(colored("Введите название города:","yellow"), end = "")
-    TownName = input() 
-    parser.AutoParserIPs(TownName)
-
-AsciiArt = pyfiglet.figlet_format("ScanTelegramBot")
-
-tmp = sp.call('clear',shell=True)
-print(colored(AsciiArt,"yellow"))
-print(colored("Введите ключ бота:", "yellow"), end = "")
-BotFatherKey = input()
-bot = telebot.TeleBot(BotFatherKey)
-try:
-    user = bot.get_me()
-    print(colored("Успешное подключение!","green"))
-except:
-    print(colored("Ошибка подключения,проверьте правильность введённых данных","red"))
-Scaner()
-
-
-@bot.message_handler(commands=["start"])
-def handle_start(message):
-    hello=open("Hello_Massage.txt")
-    String_From_Commands=hello.read()
-    bot.send_message(message.chat.id,String_From_Commands)
+# Функция с приветственным сообщением 
+def StartFunc(event,user_id,random_id,vk):
+    hello = open("/home/frizik/Projects/ScanTelegramBot/TextMessages/Hello_Massage.txt")
+    StringFromCommands = hello.read()
+    WriteMsgFunc(event.user_id,StringFromCommands,random_id,vk)
     hello.close()
 
-
-@bot.message_handler(commands=["help"])
-def handle_help(message):
-    commands=open("Commands.txt","r")
-    String_From_Commands=commands.read()
-    bot.send_message(message.chat.id,String_From_Commands)
+# Функция для вывода списка доступных команд
+def HelpFunc(event,user_id,random_id,vk):
+    commands=open("/home/frizik/Projects/ScanTelegramBot/TextMessages/Commands.txt","r")
+    StringFromCommands=commands.read()
+    WriteMsgFunc(event.user_id,StringFromCommands,random_id,vk)
     commands.close()
 
+#Функция выдающая диапозон ip адрессов на город
+def NewTownFunc(event,user_id,random_id,vk,TownName):
 
-@bot.message_handler(commands=["newip"])
-def handle_scan(message):
-    msg=bot.send_message(message.chat.id,"New range of addresses")
-    bot.register_next_step_handler(msg,writeIPS)
+    #try:
+    Answer = pr.AutoParserIPs(TownName)
+    WriteMsgFunc(event.user_id,Answer,random_id,vk)
+    #except:
+    #WriteMsgFunc(event.user_id,"Город не найден в базе!!!",random_id,vk)
 
-def writeIPS(message):
-    try:
-        IPS=message.text
-        ips=open("ips.txt","w")
-        ips.write(IPS)
-        ips.close()
-        bot.send_message(message.chat.id,"New address range is loaded!!!")
-    except Exception as e:
-        bot.reply_to(message,"Unknown error,try again((")
-
-
-@bot.message_handler(commands=["ports"])
-def handle_ports(message):
-    ports=open("ports.txt")
-    markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
-    markup.add("21","22","80")
-    Port=bot.reply_to(message,"Select the port to scan",reply_markup=markup)
-    bot.register_next_step_handler(Port,writePORT)
-def writePORT(message):
-    try:
-        port=message.text
-        ips=open("ports.txt","w")
-        ips.write(port)
-        ips.close()
-        bot.send_message(message.chat.id,"Port selected!!!")
-    except Exception as e:
-        bot.reply_to(message,"Unknown error,try again(")
-
-
-@bot.message_handler(commands="logs")
-def handle_stoping_scan(message):
-    bot.send_message(message.chat.id,"scanning stopped")
+# Основная функция 
+def main():
+    AsciiArt = pyfiglet.figlet_format("ScanVkBot")
+    tmp = sp.call('clear',shell=True)
+    print(colored(AsciiArt,"yellow"))
     
-    
+    print(colored("Введите ключ бота:","yellow"),end = "")
+    token = input()
+    vk = vk_api.VkApi(token=token)
+    random.seed(version=2)
+    longpoll = VkLongPoll(vk)
+    Triger = False
+    for event in longpoll.listen():
+        random_id = random.randint(0, 12345678900987654321)
+        if event.type == VkEventType.MESSAGE_NEW:
+            if event.to_me:
+                request = event.text
+                if request == "старт" or request == "Старт":
+                    StartFunc(event,event.user_id,random_id,vk)
+                if request == "помощь" or request == "Помощь":
+                    HelpFunc(event,event.user_id,random_id,vk)
+                if request == "город" or request == "Город":
+                    WriteMsgFunc(event.user_id,"Введите название города для скана",random_id,vk)
+                    Triger = True 
+                    print(Triger)
+                else:
+                    if Triger == True:
+                        Triger = False
+                        NewTownFunc(event,event.user_id,random_id,vk,request)
+                        
+                    else :
+                        WriteMsgFunc(event.user_id, "Неизветсная команда,проверьте правильность введённых данных",random_id,vk)
+
+# При импорте 
 if __name__ == "__main__":
-    bot.polling(none_stop=True)
+    main()

@@ -17,13 +17,8 @@ def AutoParserIPs(town):
     display.start()
     driver = webdriver.Chrome()
     link = "https://4it.me/getlistip"
-
     driver.get(link)
 
-    #Скрытый функционал
-    '''driver.get_screenshot_as_file('/home/frizik/test.png') 
-    driver.save_screenshot('/home/frizik/test.png')'''
-   
     elem = driver.find_element_by_id("city")
     elem.send_keys(town)
     elem.submit()
@@ -39,6 +34,7 @@ def AutoParserIPs(town):
         prefab1 = re.compile('\n')
         CountOfn = len(prefab1.findall(ips))
 
-        pr.StringParser(ips,CountOfStrings,CountOfn,town)
+        #pr.StringParser(ips,CountOfStrings,CountOfn,town)
     finally:
         StopParser(driver,display)
+    return ips
