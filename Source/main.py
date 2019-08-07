@@ -6,10 +6,12 @@ import subprocess as sp
 from termcolor import colored
 import pyfiglet
 import parser  as pr
+import preparation as pre
+import requests
 
 # Функция вывода сообщения
 def WriteMsgFunc(user_id, message,random_id,vk):
-    vk.method('messages.send', {'user_id': user_id, 'message': message,'random_id':random_id})
+    vk.method('messages.send', {'user_id': user_id,'message': message,'random_id':random_id})
 
 # Функция с приветственным сообщением 
 def StartFunc(event,user_id,random_id,vk):
@@ -25,14 +27,28 @@ def HelpFunc(event,user_id,random_id,vk):
     WriteMsgFunc(event.user_id,StringFromCommands,random_id,vk)
     commands.close()
 
-#Функция выдающая диапозон ip адрессов на город
-def NewTownFunc(event,user_id,random_id,vk,TownName):
+# Подготовительная функция
+def Prepare(Answer,CountOfDash,CountOfZeros,TownName):    
+    pre.StringParser(Answer,CountOfDash,CountOfZeros,TownName)
 
-    #try:
+#Функция выдающая диапозон ip адрессов на город
+def NewTownFunc(event,user_id,random_id,vk,TownName,login,password):
     Answer = pr.AutoParserIPs(TownName)
-    WriteMsgFunc(event.user_id,Answer,random_id,vk)
-    #except:
-    #WriteMsgFunc(event.user_id,"Город не найден в базе!!!",random_id,vk)
+    logPath = "/home/frizik/Projects/ScanTelegramBot/Data/ips.txt"
+    ips = open(logPath,"w")
+    ips.write(Answer)
+    ips.close()
+
+    vk_session = vk_api.VkApi(login, password)
+    vk_session.auth(token_only=True)
+
+    upload = vk_api.VkUpload(vk_session)
+    photo = upload.photo('/home/frizik/Photo/москва/DSC05281.JPG',album_id=264629427,group_id=184430889)
+    vk_photo_url = 'https://vk.com/photo{}_{}'.format(photo[0]['owner_id'], photo[0]['id'])
+    print(photo, '\nLink: ', vk_photo_url)
+    WriteMsgFunc(event.user_id,photo_url,random_id,vk)
+
+    #document = upload.docs('')Загрзука фотографий работает теперь нудно разобраться с документами
 
 # Основная функция 
 def main():
@@ -41,6 +57,12 @@ def main():
     print(colored(AsciiArt,"yellow"))
     
     print(colored("Введите ключ бота:","yellow"),end = "")
+    token = input()
+    print(colored("Введите логин от страницы администратора:","yellow"),end = "")
+    login = input()
+    print(colored("Введите пароль оут страницы администратораЖ","yellow"),end = "")
+    password = input()
+
     token = input()
     vk = vk_api.VkApi(token=token)
     random.seed(version=2)
@@ -62,7 +84,7 @@ def main():
                 else:
                     if Triger == True:
                         Triger = False
-                        NewTownFunc(event,event.user_id,random_id,vk,request)
+                        NewTownFunc(event,event.user_id,random_id,vk,request,login,password)
                         
                     else :
                         WriteMsgFunc(event.user_id, "Неизветсная команда,проверьте правильность введённых данных",random_id,vk)
