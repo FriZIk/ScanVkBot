@@ -8,6 +8,8 @@ import pyfiglet
 import parser  as pr
 import preparation as pre
 import requests
+from vk_api.keyboard import VkKeyboard, VkKeyboardColor
+import json
 
 SeparationString = "=========================================================="
 
@@ -51,9 +53,24 @@ def NewTownFunc(event,user_id,vk,TownName,login,password):
     WriteMsgFunc(event.user_id,"Получен диапозон ip адрессов города,в этом текстовом файле вы можете их просмотреть",vk)
     WriteMsgFunc(event.user_id,DocumentUrl,vk)
     print(colored("Город ","blue"),colored(TownName,"red"),colored(" обработан!!!","blue"))
-    
+
+# Настройка клавиатуры 
+def KeyboardInitialize(user_id,vk):
+    keyboard = VkKeyboard(one_time = False)
+    keyboard.add_button('Добавить порт', color = VkKeyboardColor.POSITIVE)
+    keyboard.add_button('Выбрать город', color = VkKeyboardColor.POSITIVE)
+    keyboard.add_line()  # Переход на вторую строку
+    keyboard.add_button('Начать сканирование', color = VkKeyboardColor.POSITIVE)
+    keyboard.add_button('Помощь', color = VkKeyboardColor.POSITIVE)
+
+    random_id = random.randint(0,12345678900987654321)
+    msg = "Клавиатура для удобной работы"
+    vk.method('messages.send', {'user_id': user_id, 'message': msg, 'keyboard': keyboard.get_keyboard(),'random_id':random_id})
+
+
 # Основная функция 
 def main():
+    random.seed(version=2)
     AsciiArt = pyfiglet.figlet_format("ScanVkBot")
     tmp = sp.call('clear',shell=True)
     print(colored(AsciiArt,"yellow"))
@@ -67,13 +84,12 @@ def main():
     password = input()
     
     try:
-        vk = vk_api.VkApi(token=token)
+        vk = vk_api.VkApi(token = token)
         print(colored("Успешное подключение,бот запущен!!!","green"))
         print(colored(SeparationString,"magenta"))
     except:
         print(colored("Не удалось подключится,проверьте правильность введённых данных","red"))
 
-    random.seed(version=2)
     longpoll = VkLongPoll(vk)
     Triger = False
     for event in longpoll.listen():
@@ -82,9 +98,10 @@ def main():
                 request = event.text
                 if request == "старт" or request == "Старт":
                     StartFunc(event,event.user_id,vk)
+                    KeyboardInitialize(event.user_id,vk)
                 if request == "помощь" or request == "Помощь":
                     HelpFunc(event,event.user_id,vk)
-                if request == "город" or request == "Город":
+                if request == "город" or request == "Выбрать город":
                     WriteMsgFunc(event.user_id,"Введите название города для скана",vk)
                     Triger = True
                 else:
