@@ -1,6 +1,19 @@
-You are connected to the bot-scanner of the organization DraknessResearch, if you are here, then you must follow the rules of the organization, namely:
-1) We are passive observers, WE do not help anyone, but we do not interfere with anyone (provided that someone's actions are not
-are regarded as a threat to the organization or its members);
-2) You have no right to disclose the secrets of the organization, sell the received data, help others using our data;
-3) Communication with the administration is not carried out through telegrams. You can not come out to us, but still you have the opportunity to communicate with us naryamuyu.
-Work harder, scan more carefully, and WE will go to you on your own
+VkBotScaner - универсальный сканер портов
+
+Возможности бота:
+
+1). Сканирование выбранного вами города по определённым адрессам
+2). Отсутсвие необходимости поиска диапозонов вручную (бот сам находит нужные адресса,от пользователя требуется только ввести название населённого пункта)
+3). Простой интуитивный интерфейс без ненужных (большинству обычных пользователей) функций
+4). (Не активен)Режив профи (даёт возможность самому задавать диапоозон адрессов не основываясь на сторонних базах)
+5). Возможность запуска "разведчика",способного за вас проверять найденные ресурсы (может выдавать скриншоты веб страниц)
+6). Режим брутфорса (попытка подключения к найденным ресурсам ,используя дефолтные(заводские) пароли и логины)
+7). Загрузка собственных словарей для брутфорса
+
+Внимание!!!
+
+Администрация бота не несёт ответсвенности за несоблюдениями участниками законадательства Российской федерации.
+Помните,незнание закона не освобождает от ответственности,за простое сканирование вас никто не осудит,но брутфорс и подбор паролей должен осуществляться 
+только на ваши собственные устройства или устройства лиц ,с которыми у вас обоюдное согласие.
+
+Благодарим вас за соблюдения правил сообщества,приятного пользования ботом и удачного нетсталкинга !!!

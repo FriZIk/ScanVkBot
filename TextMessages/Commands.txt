@@ -1,5 +1,8 @@
-1)Add a new range of addresses to scan:/newip
-2)Port selection for scanning:/ports
-3)Start scanning for selected addresses:/scan
-4)Show current scan logs:/logs
-5)Stop scanning:/stop
+Список доступных команд :
+
+1). Добавить порты для сканирования : /порты
+2). Получить диапозон города : /город
+3). Начать сканирование диапозона адрессов по заданным портам : /сканирование
+4). Запуск "разведчика" : /разведчик
+5). Вызвать это меню : /помощь
+6). Показать стартовое сообщение с описанием бота : /старт
