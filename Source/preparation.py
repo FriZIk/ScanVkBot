@@ -26,12 +26,11 @@ def LogWriter(RezultString,FilePath):
 
 
 def FinalIpRange(first_string_ips,second_string_ips,CountOfDash,Town):
-    #sc.CreateDataBase()
     LogPath = "/home/frizik/Projects/ScanTelegramBot/Logs/iplg.txt"
     LogPathWorkString = "/home/frizik/Projects/ScanTelegramBot/Logs/ipworkedlg.txt"
     FirstSeparation = first_string_ips.split(".")
     SecondSeparation = second_string_ips.split(".")
-    print(FirstSeparation,SecondSeparation)
+    if Debug == True : print(FirstSeparation,SecondSeparation)
     for Iterator in range(4):
         if FirstSeparation[Iterator] != SecondSeparation[Iterator]:
             IpElementF = int(FirstSeparation[Iterator])
@@ -56,7 +55,7 @@ def FinalIpRange(first_string_ips,second_string_ips,CountOfDash,Town):
                                 RezultString = FirstSeparation[0] + "." + FirstSeparation[1] + "." + FirstSeparation[2] + "." + FirstSeparation[3]
                                 IpElementF = IpElementF + 1
                                 LogWriter(RezultString,LogPath)
-                                sc.ScanFunction(RezultString,Town)                
+                                sc.ScanFunction(RezultString,Town)            
 
 def FragmentationFunc(Array,CountOfDash,ZeroIndexArray,DashIndexArray,Town):
     IndexForDash =  0
@@ -74,7 +73,7 @@ def FragmentationFunc(Array,CountOfDash,ZeroIndexArray,DashIndexArray,Town):
         RezultString = "Рабочая строка:" + first_string_ips + " " + second_string_ips + "\n"
         LogWriter(RezultString,"/home/frizik/Projects/ScanTelegramBot/Logs/ipworkedlg.txt")
 
-        print(first_string_ips,second_string_ips)
+        if Debug == True : print(first_string_ips,second_string_ips)
         FinalIpRange(first_string_ips,second_string_ips,CountOfDash,Town)
 
 

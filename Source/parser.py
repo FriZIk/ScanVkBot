@@ -4,7 +4,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from pyvirtualdisplay import Display
-import preparation as pr
+import preparation as pre
 import re
 
 def StopParser(driver,display):
@@ -34,7 +34,7 @@ def AutoParserIPs(town):
         prefab1 = re.compile('\n')
         CountOfn = len(prefab1.findall(ips))
 
-        #pr.StringParser(ips,CountOfStrings,CountOfn,town)
+        #pre.StringParser(ips,CountOfStrings,CountOfn,town)
     finally:
         StopParser(driver,display)
     return ips

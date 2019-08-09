@@ -10,8 +10,11 @@ import preparation as pre
 import requests
 from vk_api.keyboard import VkKeyboard, VkKeyboardColor
 import json
+import re
 
 SeparationString = "=========================================================="
+IpAdress = ""
+TownName = ""
 
 # Функция вывода сообщения
 def WriteMsgFunc(user_id, message,vk):
@@ -38,7 +41,11 @@ def Prepare(Answer,CountOfDash,CountOfZeros,TownName):
 
 #Функция выдающая диапозон ip адрессов на город
 def NewTownFunc(event,user_id,vk,TownName,login,password):
-    Answer = pr.AutoParserIPs(TownName)
+    try:
+        Answer = pr.AutoParserIPs(TownName)
+    except:
+        WriteMsgFunc(event.user_id,"Город не найден в базе,возможно его там нет,либо вы ввели неверное название,пожалуйста повторите попытку",vk)
+        return
     logPath = "/home/frizik/Projects/ScanTelegramBot/Data/ips.txt"
     ips = open(logPath,"w")
     ips.write(Answer)
@@ -53,6 +60,7 @@ def NewTownFunc(event,user_id,vk,TownName,login,password):
     WriteMsgFunc(event.user_id,"Получен диапозон ip адрессов города,в этом текстовом файле вы можете их просмотреть",vk)
     WriteMsgFunc(event.user_id,DocumentUrl,vk)
     print(colored("Город ","blue"),colored(TownName,"red"),colored(" обработан!!!","blue"))
+    return Answer
 
 # Настройка клавиатуры 
 def KeyboardInitialize(user_id,vk):
@@ -67,7 +75,19 @@ def KeyboardInitialize(user_id,vk):
     msg = "Клавиатура для удобной работы"
     vk.method('messages.send', {'user_id': user_id, 'message': msg, 'keyboard': keyboard.get_keyboard(),'random_id':random_id})
 
-
+# Сканируюущая функция
+def ScanFunc(IpAdress,TownName,event,user_id,vk):
+    if IpAdress == "":
+        WriteMsgFunc(event.user_id, "Невозможно начать сканирование так как не выбран город,пожалуйста проверьте указан ли диапозон адрессов",vk)
+        return
+    print(colored("Начинаю сканирование города:","yellow"),colored(TownName,"red"))
+    prefab = re.compile('-')
+    CountOfStrings = len(prefab.findall(IpAdress))
+    prefab1 = re.compile('\n')
+    CountOfn = len(prefab1.findall(IpAdress))
+    pre.StringParser(IpAdress,CountOfStrings,CountOfn,TownName)
+    WriteMsgFunc(event.user_id,"Обработка завершенна,сформированна база данных ,содержащая список всех доступных адрессов с портами",vk)
+    print(colored("Город ","blue"),colored(TownName,"red"),colored(" обработан полученна база данных доступных адрессов!!!","blue"))
 # Основная функция 
 def main():
     random.seed(version=2)
@@ -101,6 +121,9 @@ def main():
                     KeyboardInitialize(event.user_id,vk)
                 if request == "помощь" or request == "Помощь":
                     HelpFunc(event,event.user_id,vk)
+                if request == "Начать сканирование" or request == "начать сканирование":
+                    WriteMsgFunc(event.user_id,"Началось сканирование,это может занять много времени,ожидайте ответного сообщения со списком найденных доступных ip адрессов",vk)
+                    ScanFunc(IpAdress,TownName,event,event.user_id,vk)
                 if request == "город" or request == "Выбрать город":
                     WriteMsgFunc(event.user_id,"Введите название города для скана",vk)
                     Triger = True
@@ -108,7 +131,7 @@ def main():
                     if Triger == True:
                         Triger = False
                         WriteMsgFunc(event.user_id,"Подготавливается диапозон адрессов,пожалуйста подождите",vk)
-                        NewTownFunc(event,event.user_id,vk,request,login,password)
+                        IpAdress = NewTownFunc(event,event.user_id,vk,request,login,password)
 
 # При импорте 
 if __name__ == "__main__":
