@@ -39,6 +39,15 @@ def HelpFunc(event,user_id,vk):
 def Prepare(Answer,CountOfDash,CountOfZeros,TownName):    
     pre.StringParser(Answer,CountOfDash,CountOfZeros,TownName)
 
+# Функция для загрузки картинок и документов
+def UploadFunc(login,password,PathString):
+    vk_session = vk_api.VkApi(login, password)
+    vk_session.auth(token_only=True)
+    upload = vk_api.VkUpload(vk_session)
+    document = upload.document(PathString,"db",group_id = 184430889)
+    DocumentUrl = "vk.com/doc{}_{}".format(document["doc"]["owner_id"],document["doc"]["id"])
+    return DocumentUrl
+
 #Функция выдающая диапозон ip адрессов на город
 def NewTownFunc(event,user_id,vk,TownName,login,password):
     try:
@@ -51,12 +60,7 @@ def NewTownFunc(event,user_id,vk,TownName,login,password):
     ips.write(Answer)
     ips.close()
 
-    vk_session = vk_api.VkApi(login, password)
-    vk_session.auth(token_only=True)
-
-    upload = vk_api.VkUpload(vk_session)
-    document = upload.document("/home/frizik/Projects/ScanTelegramBot/Data/ips.txt","db",group_id = 184430889)
-    DocumentUrl = "vk.com/doc{}_{}".format(document["doc"]["owner_id"],document["doc"]["id"])
+    DocumentUrl = UploadFunc(login,password,logPath)
     WriteMsgFunc(event.user_id,"Получен диапозон ip адрессов города,в этом текстовом файле вы можете их просмотреть",vk)
     WriteMsgFunc(event.user_id,DocumentUrl,vk)
     print(colored("Город ","blue"),colored(TownName,"red"),colored(" обработан!!!","blue"))
@@ -76,7 +80,7 @@ def KeyboardInitialize(user_id,vk):
     vk.method('messages.send', {'user_id': user_id, 'message': msg, 'keyboard': keyboard.get_keyboard(),'random_id':random_id})
 
 # Сканируюущая функция
-def ScanFunc(IpAdress,TownName,event,user_id,vk):
+def ScanFunc(IpAdress,TownName,event,user_id,vk,login,password):
     if IpAdress == "":
         WriteMsgFunc(event.user_id, "Невозможно начать сканирование так как не выбран город,пожалуйста проверьте указан ли диапозон адрессов",vk)
         return
@@ -86,8 +90,13 @@ def ScanFunc(IpAdress,TownName,event,user_id,vk):
     prefab1 = re.compile('\n')
     CountOfn = len(prefab1.findall(IpAdress))
     pre.StringParser(IpAdress,CountOfStrings,CountOfn,TownName)
+
+    DataBasePath = "/home/frizik/Projects/ScanTelegramBot/Data/WhiteIps.db"
+    DocumentUrl = UploadFunc(login,password,DataBasePath)
     WriteMsgFunc(event.user_id,"Обработка завершенна,сформированна база данных ,содержащая список всех доступных адрессов с портами",vk)
-    print(colored("Город ","blue"),colored(TownName,"red"),colored(" обработан полученна база данных доступных адрессов!!!","blue"))
+    WriteMsgFunc(event.user_id,DocumentUrl,vk)
+    print(colored("Город обработан полученна база данных доступных адрессов!!!","blue"))
+
 # Основная функция 
 def main():
     random.seed(version=2)
@@ -123,7 +132,7 @@ def main():
                     HelpFunc(event,event.user_id,vk)
                 if request == "Начать сканирование" or request == "начать сканирование":
                     WriteMsgFunc(event.user_id,"Началось сканирование,это может занять много времени,ожидайте ответного сообщения со списком найденных доступных ip адрессов",vk)
-                    ScanFunc(IpAdress,TownName,event,event.user_id,vk)
+                    ScanFunc(IpAdress,TownName,event,event.user_id,vk,login,password)
                 if request == "город" or request == "Выбрать город":
                     WriteMsgFunc(event.user_id,"Введите название города для скана",vk)
                     Triger = True

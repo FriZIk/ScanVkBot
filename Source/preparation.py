@@ -30,7 +30,7 @@ def FinalIpRange(first_string_ips,second_string_ips,CountOfDash,Town):
     LogPathWorkString = "/home/frizik/Projects/ScanTelegramBot/Logs/ipworkedlg.txt"
     FirstSeparation = first_string_ips.split(".")
     SecondSeparation = second_string_ips.split(".")
-    if Debug == True : print(FirstSeparation,SecondSeparation)
+    print(FirstSeparation,SecondSeparation)
     for Iterator in range(4):
         if FirstSeparation[Iterator] != SecondSeparation[Iterator]:
             IpElementF = int(FirstSeparation[Iterator])

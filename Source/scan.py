@@ -28,7 +28,7 @@ def Check():
 def CheckForUniqueness(TownName,FinalIp,Port):
     CheckList = Check() #Полный пиздец но бота будет всё равно немного подргуому работать так тчо пока так сойдёт
     if FinalIp not in CheckList:
-        print("Новая уникальная строка")
+        #print("Новая уникальная строка")
         City = ListIps(town = TownName, ips = FinalIp, ports = Port)
         City.save() 
     '''else : 
